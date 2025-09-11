@@ -1,10 +1,14 @@
 "use client";
 import { useState } from "react";
 
-export default function LeagueIdForm({ onSubmit }) {
+interface LeagueIdFormProps {
+	onSubmit: (leagueID: string) => void;
+}
+
+export default function LeagueIdForm({ onSubmit }: LeagueIdFormProps) {
 	const [inputValue, setInputValue] = useState('');
 
-	const handleSubmit = (event) => {
+	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		onSubmit(inputValue);
 	};
