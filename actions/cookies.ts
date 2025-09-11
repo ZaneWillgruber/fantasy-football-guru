@@ -14,4 +14,5 @@ export async function setCookie(key: string, value: string) {
 export async function resetCookies() {
 	const cookieStore = await cookies();
 	cookieStore.delete("leagueID");
+	cookieStore.delete("userID");
 }
