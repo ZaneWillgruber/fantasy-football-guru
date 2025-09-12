@@ -5,6 +5,7 @@ import { LeagueData } from "@/types/league";
 import { UserData } from "@/types/user";
 import { GoogleGenAI } from "@google/genai";
 import { Content } from "@google/genai/node";
+import ReactMarkdown from "react-markdown";
 
 interface HomePageProps {
 	leagueID: string;
@@ -46,7 +47,7 @@ export default async function HomePage({ leagueID, userID }: HomePageProps) {
 			{/* <br /> */}
 			{/* <br /> */}
 			{/* <br /> */}
-			<p>{response.text}</p>
+			<ReactMarkdown>{response.text}</ReactMarkdown>
 		</div>
 	)
 }
