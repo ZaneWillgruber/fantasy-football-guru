@@ -3,7 +3,7 @@ import UserCard from "./user";
 
 interface UsersDisplayProps {
 	users: UserData[]
-	onClick: (id: string) => void;
+	onClick: (key: string, id: string) => Promise<void>;
 }
 
 export default function UsersDisplay({ users, onClick }: UsersDisplayProps) {

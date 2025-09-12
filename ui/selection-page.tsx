@@ -3,13 +3,13 @@
 import { resetCookies } from "@/actions/cookies";
 import { useEffect, useState } from "react";
 import { LeagueData } from "@/types/league";
-import { UserData } from "@/types/user";
 import UsersDisplay from "@/components/users/users-display";
 import { FaRedo } from 'react-icons/fa';
+import { getLeagueInfo } from "@/functions/get-league-info";
 
 interface SelectionPageProps {
 	leagueID: string;
-	onClick: (id: string) => void;
+	onClick: (key: string, id: string) => Promise<void>;
 }
 
 export default function SelectionPage({ leagueID, onClick }: SelectionPageProps) {
@@ -23,21 +23,10 @@ export default function SelectionPage({ leagueID, onClick }: SelectionPageProps)
 			setLoading(true);
 			setError(null);
 			try {
-				const [leagueResponse, usersResponse] = await Promise.all([
-					fetch(`https://api.sleeper.app/v1/league/${leagueID}`),
-					fetch(`https://api.sleeper.app/v1/league/${leagueID}/users`)
-				]);
-
-				if (!leagueResponse.ok) {
-					throw new Error("League not found. Please check the ID.");
+				const leagueData = await getLeagueInfo(leagueID);
+				if (!leagueData) {
+					throw new Error("Failed to get league information");
 				}
-				if (!usersResponse.ok) {
-					throw new Error("Could not fetch users for the league.");
-				}
-
-				const leagueData: LeagueData = await leagueResponse.json();
-				const usersData: UserData[] = await usersResponse.json();
-				leagueData.users = usersData;
 
 				setLeague(leagueData);
 			}

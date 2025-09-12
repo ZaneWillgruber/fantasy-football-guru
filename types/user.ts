@@ -1,3 +1,5 @@
+import { RosterData } from "./roster";
+
 export interface UserData {
 	user_id: string;
 	avatar: string;
@@ -6,4 +8,5 @@ export interface UserData {
 		team_name: string;
 		avatar: string;
 	};
+	roster: RosterData | undefined
 }

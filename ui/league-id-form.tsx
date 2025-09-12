@@ -2,7 +2,7 @@
 import { useState } from "react";
 
 interface LeagueIdFormProps {
-	onSubmit: (leagueID: string) => void;
+	onSubmit: (key: string, leagueID: string) => Promise<void>;
 }
 
 export default function LeagueIdForm({ onSubmit }: LeagueIdFormProps) {
@@ -10,7 +10,7 @@ export default function LeagueIdForm({ onSubmit }: LeagueIdFormProps) {
 
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		onSubmit(inputValue);
+		onSubmit("leagueID", inputValue);
 	};
 
 	return (

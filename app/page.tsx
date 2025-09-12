@@ -1,29 +1,29 @@
-"use client";
-import { useLeagueID } from "@/hooks/use-league-id";
 import SelectionPage from "@/ui/selection-page";
 import LeagueIdForm from "@/ui/league-id-form";
 import HomePage from "@/ui/home-page";
+import { cookies } from "next/headers";
+import { setCookie } from "@/actions/cookies";
+import ResetPage from "./reset/page";
 
-export default function Home() {
-	const { leagueID, userID, loading, error, saveLeagueID, saveUserID } = useLeagueID();
-
-	if (loading) {
-		return <p>Loading...</p>;
-	}
-
-	if (error) {
-		return <p className="text-red-500">{error}</p>;
-	}
+export default async function Home() {
+	const cookieStore = await cookies();
+	const leagueID = cookieStore.get("leagueID");
+	const userID = cookieStore.get("userID");
 
 	if (leagueID && userID) {
-		return <HomePage leagueID={leagueID} userID={userID} />
+		return (
+			<div>
+				<ResetPage />
+				<HomePage leagueID={leagueID.value} userID={userID.value} />
+			</div>
+		)
 	}
 
 	if (leagueID) {
-		return <SelectionPage leagueID={leagueID} onClick={saveUserID} />;
+		return <SelectionPage leagueID={leagueID.value} onClick={setCookie} />;
 	}
 
 	return (
-		<LeagueIdForm onSubmit={saveLeagueID} />
+		<LeagueIdForm onSubmit={setCookie} />
 	);
 }

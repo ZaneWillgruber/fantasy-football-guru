@@ -2,7 +2,7 @@ import { UserData } from "@/types/user";
 
 interface UserCardProps {
 	user: UserData;
-	onClick: (id: string) => void;
+	onClick: (key: string, id: string) => Promise<void>;
 }
 
 
@@ -11,7 +11,7 @@ export default function UserCard({ user, onClick }: UserCardProps) {
 
 	return (
 		<div
-			onClick={() => onClick(user.user_id)}
+			onClick={() => onClick("userID", user.user_id)}
 			className="bg-slate-800 border border-slate-700 rounded-xl shadow-lg hover:shadow-2xl hover:border-indigo-500 transition-all duration-300 transform hover:-translate-y-1">
 			<div className="p-6 text-center">
 				<img

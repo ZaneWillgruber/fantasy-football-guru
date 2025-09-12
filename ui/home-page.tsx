@@ -1,31 +1,49 @@
-import { getMyRoster } from "@/functions/get-my-roster";
-import { useEffect, useState } from "react";
+import { getLeagueInfo } from "@/functions/get-league-info";
+import { LeagueData } from "@/types/league";
+import { UserData } from "@/types/user";
+import { GoogleGenAI } from "@google/genai";
+import { Content } from "@google/genai/node";
 
 interface HomePageProps {
 	leagueID: string;
 	userID: string;
 }
 
-export default function HomePage({ leagueID, userID }: HomePageProps) {
-	const [roster, setRoster] = useState("");
-
-	useEffect(() => {
-		const fetchRosterData = async () => {
-			const rosterData = await getMyRoster(leagueID, userID);
-			if (rosterData) {
-				setRoster(rosterData)
-			}
+export default async function HomePage({ leagueID, userID }: HomePageProps) {
+	const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+	const messages: Content[] = [
+		{
+			role: "user",
+			parts: [{ text: "Is the sky yellow" }],
 		}
+	]
 
-		fetchRosterData();
-	}, []);
+	const league: LeagueData | undefined = await getLeagueInfo(leagueID);
+	const users: UserData[] = league!.users
 
-	console.log(roster);
+	const response = await ai.models.generateContent({
+		model: "gemini-2.0-flash-001",
+		contents: messages,
+	});
+
 	return (
 		<div>
 			<p>{leagueID}</p>
 			<p>{userID}</p>
-			<p>{roster}</p>
+			<br />
+			{users.map(user => (
+				<div key={user.user_id}>
+					{user.display_name}'s Roster
+					{user.roster!.players_data.map(player => (
+						<p key={player.player_id}>{player.position}: {player.first_name} {player.last_name}</p>
+					))}
+					<br />
+				</div>
+			))}
+			<br />
+			<br />
+			<br />
+			<p>{response.text}</p>
 		</div>
 	)
 }

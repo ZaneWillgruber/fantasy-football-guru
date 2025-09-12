@@ -1,7 +1,8 @@
 "use server"
 import { RosterData } from "@/types/roster";
+import { getPlayerInfo } from "./get-player-info";
 
-export async function getMyRoster(leagueID: string, userID: string) {
+export async function getRoster(leagueID: string, userID: string) {
 	try {
 		const res = await fetch(`https://api.sleeper.app/v1/league/${leagueID}/rosters`)
 		if (!res.ok) {
@@ -15,7 +16,7 @@ export async function getMyRoster(leagueID: string, userID: string) {
 			throw new Error("Could not find roster");
 		}
 
-		return buildRosterString(myRoster);
+		return myRoster
 	}
 	catch (err) {
 
@@ -23,11 +24,11 @@ export async function getMyRoster(leagueID: string, userID: string) {
 }
 
 
-function buildRosterString(data: RosterData): string {
+async function buildRosterString(data: RosterData) {
 	let str = "Players:\n";
 
 	for (const player of data.players) {
-		str += ` - ${player}\n`;
+		str += ` - ${await getPlayerInfo(player)}\n`;
 	}
 
 	str += "\nStarters:\n";
